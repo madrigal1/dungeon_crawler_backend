@@ -9,8 +9,11 @@
 <body>
     <h1>Uplaod file to ipfs</h1>
     <form enctype="multipart/form-data" method="POST" action="/v1/character/new">
-        <label for="fileName">FileName</label>
+        <label for="fileName">Character Name:</label>
         <input type="text" name="fileName" />
+        <br/>
+        <label for="desc">Character Descripton:</label>
+        <input type="text" name="desc" />
         <br/>
         <label for="file">Upload File</label>
         <input type="file" name="file"/>
