@@ -11,7 +11,11 @@ router.post('/',async (req,res)=>{
     const fileName = req.body.fileName;
 
     const fileHash = await addFileToIpfs(fileName,file);
-
+   if(!fileHash){
+       throw new Error(`Failed to pin image to ipfs`);
+   }else {
+       console.log(`File Hash${fileHash}`);
+   }
     // return res.json({
     //     fileName,
     //     fileHash,
