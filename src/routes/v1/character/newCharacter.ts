@@ -11,21 +11,22 @@ router.post('/',async (req,res)=>{
    }
     const file =  req.files.file as UploadedFile;
     const fileName = req.body.fileName;
-    const desc = req.body.desc; 
     //const fileHash = await addFileToIpfs(fileName,file);
     const fileHash ="debugging_ongoing";
     const character :ICharacter= {
-        name:"test",
-        description:desc,
-        walletAddress:"debug",
-        email:"debug@email.com",
+        name:req.body.name,
+        description:req.body.desc,
+        walletAddress:req.body.walletAddress,
+        email:req.body.email,
         image:fileHash,
-        story:"",
-        status:"test",
+        story:req.body.story,
+        status:req.body.status,
         votes:0,
         createdAt:new Date().toISOString()
     } 
-    await uploadCharacterToDb(character);
+    const dbCharacter = await uploadCharacterToDb(character);
+    console.log(`character:${JSON.stringify(dbCharacter,null,2)}`);
+    
    if(!fileHash){
        throw new Error(`Failed to pin image to ipfs`);
    }else {
