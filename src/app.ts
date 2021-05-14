@@ -4,6 +4,7 @@ import { corsUrl, environment } from "./config";
 import routesV1 from './routes/v1'
 import morgan from 'morgan'
 import fileUpload from 'express-fileupload'
+import  './database'
 
 process.on("uncaughtException", (e) => {
   console.error(e);

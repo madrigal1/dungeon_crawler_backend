@@ -42,7 +42,7 @@ router.post('/',async (req,res)=>{
     //     fileName,
     //     fileHash,
     // })
-    return res.render('upload',{fileName,fileHash});
+    return res.render('upload',{fileName:req.body.name,fileHash});
 });
 
 export default router;
