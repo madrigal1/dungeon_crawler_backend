@@ -4,8 +4,15 @@ export default interface ICharacter {
 	walletAddress: string,
 	email: string,
 	image: string,
-	story:string,
-	status:string,
+	isStory:boolean,
+	status:Status,
 	votes: number,
 	createdAt: string //iso date
+}
+
+export enum Status {
+	APPROVED="appproved",
+	INGAME="inGame",
+	REJECTED="rejected",
+	NOTAPPROVED="notApproved"
 }

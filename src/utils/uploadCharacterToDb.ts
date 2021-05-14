@@ -23,39 +23,39 @@ const getId = ():string =>{
 
 
 const uploadCharacterToDb = async (character:ICharacter):Promise<ICharacter> =>{
-    let charac=undefined;
-   initIPFSInstance().then(async (ipfs)=>{
+   return initIPFSInstance().then(async (ipfs)=>{
     const orbitdb = await OrbitDB.createInstance(ipfs);
 
     // Create / Open a database
-    const db = await orbitdb.docstore("characters", { indexBy: "walletAddress" });
+    const db = await orbitdb.docstore("characters");
     await db.load();
 
     //check if character already exists
-    charac= await db.query((e: any) => e.walletAddress == character.walletAddress);
-    console.log("character already in db: " + JSON.stringify(charac,null,4));
+    let charac= await db.query((e: any) => e.name == character.name);
     if (charac.length != 0){
+      console.log("character already in db: " + JSON.stringify(charac,null,5));
       await orbitdb.disconnect();
-      return charac;
+      return {...charac[0]};
     }
-      
+
 
     // Add an entry
-    const hash = await db.put({ _id: getId(), ...character });
+    const hash = await db.put({ _id: getId(), name:character.name, ...character });
     console.log(hash);
 
 
     //Query character
-    charac = await db.query((e: any) => e.walletAddress == character.walletAddress);
+    charac = await db.query((e: any) => e.name == character.name);
 
+    console.log(`New created charac: ${JSON.stringify(charac,null,5)}`)
 
-
+    console.log(`Output full db`);
     // Output full db
-    const result = await db.query((e: any) => e == e);
+    const result =  await db.query((e: any) => e.name == character.name);
     console.log(`result: ${JSON.stringify(result, null, 4)}`);
     await orbitdb.disconnect();
+    return {...charac[0]};
    });
-    return charac;
 }
 
 
