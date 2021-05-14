@@ -15,7 +15,7 @@ let ipfs:any,orbitdb:any,characdb:any;
 (async()=>{
      ipfs = await IPFS.create(ipfsOptions as Options);
      orbitdb = await OrbitDB.createInstance(ipfs);
-    characdb = await orbitdb.docstore("characters");
+     characdb = await orbitdb.docstore("characters",{ indexBy: '_id' });
       characdb.load();
 })()
 
