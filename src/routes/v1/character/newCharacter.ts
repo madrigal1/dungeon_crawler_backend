@@ -11,21 +11,20 @@ router.post('/',async (req,res)=>{
    }
     const file =  req.files.file as UploadedFile;
     const fileName = req.body.fileName;
-    // let fileHash;
-    // try {
-    //    fileHash = await addFileToIpfs(fileName,file);
-    // }catch(err) {
-    //     throw new Error(err);
-    // }
-   
-    const fileHash ="debugging_ongoing";
+    let fileHash;
+    try {
+       fileHash = await addFileToIpfs(fileName,file);
+    }catch(err) {
+        throw new Error(err);
+    }
+    //const fileHash ="debugging_ongoing";
     const character :ICharacter= {
         name:req.body.name,
         description:req.body.desc,
         walletAddress:req.body.walletAddress,
         email:req.body.email,
         image:fileHash,
-        isStory:false,
+        isStory: req.body.isStory === "yes"? true:false,
         status:req.body.status,
         votes:0,
         createdAt:new Date().toISOString()
