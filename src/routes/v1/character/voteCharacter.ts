@@ -3,13 +3,16 @@ import voteCharacter from '../../../utils/voteCharacter';
 
 const router = express.Router();
 
-router.get("/:name",async (req,res)=>{
-    const characterName = req.params.name;
+router.get("/",async (req,res,next)=>{
+    const characterName = req.query.name as string;
+    characterName.trim();
+    console.log("cn " + characterName);
     try {
-       const res =  await voteCharacter(characterName);
-       if(!res) throw new Error(`character not there in db.please vote on valid character`)
+       const result =  await voteCharacter(characterName as string);
+       if(!result) throw new Error(`character not there in db.please vote on valid character`);
+       return res.status(200).json({success:true,charac:result});
     }catch(err) {
-        throw new Error(err);
+       next(err);
     }
 })
 

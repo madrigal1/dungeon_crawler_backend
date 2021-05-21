@@ -2,28 +2,27 @@ import {characdb} from '../database'
 import ICharacter from './character';
 
 
-const voteCharacter = async (characterName:string):Promise<ICharacter | undefined> => {
+const deleteCharacter = async (characterName:string):Promise<boolean> => {
     let charac= await characdb.query((e: any) => e.name == characterName);
     if (charac.length <= 0){
       console.log("character not already in db: " + JSON.stringify(charac,null,5));
-      return undefined;
+      return false;
     }
     if(!charac[0]._id) {
         console.log("no id found in the character");
-        return undefined;
+        return false;
     }
 
 
     try {
         await characdb.del(charac[0]._id);
-        charac[0].votes++;
-        console.log(`updated votes for charcter: ${JSON.stringify(charac[0],null,4)}`);
-        await characdb.put(charac[0]);
-        return charac;
+        const result =  await characdb.query((e: any) => e.name == e.name);
+        console.log(`result: ${JSON.stringify(result, null, 5)}`);
+        return true;
     }catch(err) {
-        console.log(`vote charac function failure: ${err}`);
-        return undefined;
+        console.log(`delete charac function failure: ${err}`);
+        return false;
     }
 }
 
-export default voteCharacter;
+export default deleteCharacter;

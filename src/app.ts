@@ -47,14 +47,15 @@ app.use("/v1", routesV1);
 // catch 404 and forward to error handler
 app.use((req:Request, res:Response, next:NextFunction) => {
     const route = res.req.originalUrl;
-    throw new Error(`No such route: ${route}`);
+    const error = new Error(`No such route: ${route}`);
+    next(error);
 });
 
 // Middleware Error Handler
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-      console.error(err);
-      return res.status(500).send(err.message);
+      console.log("HERE ERROR " + err);
+      return res.status(500).json({success:false,msg: err.message});
 });
 
 export default app;

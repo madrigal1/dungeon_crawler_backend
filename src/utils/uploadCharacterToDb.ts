@@ -12,14 +12,15 @@ const getId = ():string =>{
 }
 
 
-const uploadCharacterToDb = async (character:ICharacter):Promise<ICharacter> =>{
+const uploadCharacterToDb = async (character:ICharacter):Promise<ICharacter| undefined> =>{
 
     // Create / Open a database
     //check if character already exists
     let charac= await characdb.query((e: any) => e.name == character.name);
     if (charac.length != 0){
       console.log("character already in db: " + JSON.stringify(charac,null,5));
-      return {...charac[0]};
+      //return {...charac[0]};
+      return undefined;
     }
 
 
@@ -35,9 +36,8 @@ const uploadCharacterToDb = async (character:ICharacter):Promise<ICharacter> =>{
 
     console.log(`Output full db`);
     // Output full db
-    const result =  await characdb.query((e: any) => e.name == character.name);
-    console.log(`result: ${JSON.stringify(result, null, 4)}`);
-    await orbitdb.disconnect();
+    const result =  await characdb.query((e: any) => e.name == e.name);
+    console.log(`result: ${JSON.stringify(result, null, 5)}`);
     return {...charac[0]};
 }
 

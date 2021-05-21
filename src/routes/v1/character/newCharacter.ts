@@ -5,21 +5,20 @@ import uploadCharacterToDb from '../../../utils/uploadCharacterToDb';
 import addFileToIpfs from '../../../utils/uploadFileToIpfs';
 const router = express.Router();
 
-router.post('/',async (req,res)=>{
-   if(!req.files){
-       throw new Error(`error: no image file recieved in the new character router`);
-   }
-    const file =  req.files.file as UploadedFile;
-    const fileName = req.body.fileName;
+router.post('/',async (req,res,next)=>{
     let fileHash;
     try {
-       fileHash = await addFileToIpfs(fileName,file);
+        if(!req?.files)
+            throw new Error(`error: no image file recieved in the new character router`);
+        const file =  req.files.file as UploadedFile;
+        const fileName = req.body.name;
+        fileHash = await addFileToIpfs(fileName,file);
     }catch(err) {
-        throw new Error(err);
+        next(err);
     }
     //const fileHash ="debugging_ongoing";
     const character :ICharacter= {
-        name:req.body.name,
+        name:req.body.name.trim(),
         description:req.body.desc,
         walletAddress:req.body.walletAddress,
         email:req.body.email,
@@ -31,17 +30,23 @@ router.post('/',async (req,res)=>{
     } 
     const dbCharacter = await uploadCharacterToDb(character);
     console.log(`character:${JSON.stringify(dbCharacter,null,2)}`);
-    
-   if(!fileHash){
-       throw new Error(`Failed to pin image to ipfs`);
-   }else {
-       console.log(`File Hash${fileHash}`);
-   }
+    try {
+        if(!fileHash)
+            throw new Error(`Failed to pin image to ipfs`);
+         console.log(`File Hash${fileHash}`);
+
+        if(!dbCharacter)
+            throw new Error(`character ${character.name} already exists`);
+        res.status(200).json({success:true,charac:dbCharacter});
+    }catch(err) {
+        next(err);
+    }
+  
     // return res.json({
     //     fileName,
     //     fileHash,
     // })
-    return res.render('upload',{fileName:req.body.name,fileHash});
+    //return res.render('upload',{fileName:req.body.name,fileHash});
 });
 
 export default router;
