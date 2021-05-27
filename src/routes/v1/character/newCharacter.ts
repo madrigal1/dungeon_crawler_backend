@@ -25,7 +25,7 @@ router.post('/',async (req,res,next)=>{
         image:fileHash,
         isStory: req.body.isStory === "yes"? true:false,
         status:req.body.status,
-        votes:0,
+        votes:[],
         createdAt:new Date().toISOString()
     } 
     const dbCharacter = await uploadCharacterToDb(character);

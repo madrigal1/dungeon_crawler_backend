@@ -6,7 +6,7 @@ export default interface ICharacter {
 	image: string,
 	isStory:boolean,
 	status:Status,
-	votes: number,
+	votes: string[],
 	createdAt: string //iso date
 }
 
